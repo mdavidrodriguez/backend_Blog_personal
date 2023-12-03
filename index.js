@@ -1,4 +1,5 @@
 const { conexion } = require("./database/connection")
+const routesArticulos = require("./routes/articulo")
 const express = require("express")
 const cors = require("cors")
 
@@ -15,19 +16,11 @@ app.use(cors())
 
 // Convertir body a objeto js
 app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 
 // Crear rutas
-
-
-// Rutas
-app.get('/probando', (req, res) => {
-    console.log("se ha ejecutado el endpoint probando");
-    return res.status(200).send({
-        curso: 'Master en react',
-        autor: "Mateo R",
-        url: "cursomateo.com"
-    })
-});
+// Rutas prueba hardcodeadas
+app.use('/api', routesArticulos);
 
 
 const PORT = 3000
