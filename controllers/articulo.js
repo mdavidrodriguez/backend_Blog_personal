@@ -1,23 +1,18 @@
-const validator = require("validator")
+
 const Articulo = require("../models/Articulo")
+const { validarArticulo } = require("../helpers/validar")
 
 const prueba = (req, res) => {
     return res.status(200).json({ mensaje: 'Soy una accion de prueba en mi controlador de articulos' })
 }
 
-const create = (req, res) => {
+const create = async (req, res) => {
     // recoger los parametros por post a guardar
     const parametros = req.body;
 
     // validar datos
     try {
-        const validar_titulo = !validator.isEmpty(parametros.titulo) && validator.isLength(parametros.titulo, { min: 0, max: 15 });
-        const validar_contenido = !validator.isEmpty(parametros.contenido);
-
-        if (!validar_titulo || !validar_contenido) {
-            throw new Error("No se ha validado la información");
-        }
-
+        validarArticulo(parametros);
     } catch (error) {
         return res.status(400).json({
             status: "error",
@@ -44,7 +39,7 @@ const create = (req, res) => {
         return res.status(200).json({
             status: 'success',
             articulo: articuloGuardado,
-            mensaje: 'Arituculo guardado cone éxito'
+            mensaje: 'Arituculo guardado con éxito'
         })
     })
         .catch(error => {
@@ -142,22 +137,17 @@ const updateArticulo = (req, res) => {
     // Recoger datos del body
     const parametros = req.body;
 
-
     // Validar datos
     try {
-        const validar_titulo = !validator.isEmpty(parametros.titulo) && validator.isLength(parametros.titulo, { min: 0, max: 15 });
-        const validar_contenido = !validator.isEmpty(parametros.contenido);
-
-        if (!validar_titulo || !validar_contenido) {
-            throw new Error("No se ha validado la información");
-        }
-
+        validarArticulo(parametros);
     } catch (error) {
         return res.status(400).json({
             status: "error",
             mensaje: 'Faltan datos por enviar',
         })
     }
+
+
 
     // Buscar y actualizar articulo
     Articulo.findOneAndUpdate({ _id: id_articulo }, parametros, { new: true }).then((articuloActualizado) => {
@@ -174,7 +164,8 @@ const updateArticulo = (req, res) => {
             articulo: articuloActualizado
         })
 
-    });
+    })
+
 
 }
 
